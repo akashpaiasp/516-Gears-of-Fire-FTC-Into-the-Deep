@@ -31,10 +31,11 @@ public class Hardware {
     public DcMotor rb;
     public DcMotor lf;
     public DcMotor lb;
-    public DcMotor lift;
+    public DcMotor vertLift;
+    public Servo horiLift;
     //public CRServo wheel1;
     //public DcMotorEx liftExtender;
-    public Servo claw1;
+    public Servo claw;
     //public Servo claw2;
 
 
@@ -52,12 +53,12 @@ public class Hardware {
 
     public void init(HardwareMap hwMap) {
 
-        lift = hwMap.get(DcMotor.class,"lift");
-        lift.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        vertLift = hwMap.get(DcMotor.class,"lift");
+        vertLift.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         //lift.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-        lift.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        vertLift.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         //lift.setDirection(DcMotorSimple.Direction.REVERSE);
-        lift.setPower(0);
+        vertLift.setPower(0);
 
         rf = hwMap.get(DcMotor.class, "rf");
         //rf.setDirection(DcMotorSimple.Direction.REVERSE);
@@ -80,6 +81,9 @@ public class Hardware {
         rb.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         rb.setPower(0);
 
+        horiLift = hwMap.get(Servo.class, "horilift");
+        claw = hwMap.get(Servo.class, "claw");
+
         lb = hwMap.get(DcMotor.class, "lb");
         //rf.setDirection(DcMotorSimple.Direction.REVERSE);
         lb.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
@@ -97,11 +101,11 @@ public class Hardware {
     }
 
     public void liftsetPower(double apow) {
-        lift.setPower(apow);
+        vertLift.setPower(apow);
     }
 
     public void setclaw1Pos(double pos) {
-        claw1.setPosition(pos);
+        claw.setPosition(pos);
     }
 
 }

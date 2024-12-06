@@ -72,6 +72,7 @@ public class Teleop extends LinearOpMode {
     // Declare OpMode members for each of the 4 motors.
     private ElapsedTime runtime = new ElapsedTime();
     private double scaleFactor;
+    boolean pressingRB = false;
 
     @Override
     public void runOpMode() {
@@ -140,5 +141,14 @@ public class Teleop extends LinearOpMode {
             telemetry.addData("Front left/Right", "%4.2f, %4.2f", leftFrontPower, rightFrontPower);
             telemetry.addData("Back  left/Right", "%4.2f, %4.2f", leftBackPower, rightBackPower);
             telemetry.update();
+
+            if(gamepad2.right_bumper && !pressingRB) {
+                robot.claw.setPosition(0.5);
+                pressingRB = true;
+            } else if(!gamepad2.right_bumper) {
+                robot.claw.setPosition(0);
+                pressingRB = false;
+            }
+
         }
     }}
