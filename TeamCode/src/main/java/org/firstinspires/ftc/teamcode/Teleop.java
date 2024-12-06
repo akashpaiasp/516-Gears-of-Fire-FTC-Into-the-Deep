@@ -63,42 +63,20 @@ import com.qualcomm.robotcore.util.ElapsedTime;
  * Remove or comment out the @Disabled line to add this OpMode to the Driver Station OpMode list
  */
 
+
+
 @TeleOp(name="Teleop", group="Linear OpMode")
 public class Teleop extends LinearOpMode {
+    private Hardware robot;
 
     // Declare OpMode members for each of the 4 motors.
     private ElapsedTime runtime = new ElapsedTime();
-    private DcMotor leftFrontDrive = null;
-    private DcMotor leftBackDrive = null;
-    private DcMotor rightFrontDrive = null;
-    private DcMotor rightBackDrive = null;
     private double scaleFactor;
 
     @Override
     public void runOpMode() {
 
-        // Initialize the hardware variables. Note that the strings used here must correspond
-        // to the names assigned during the robot configuration step on the DS or RC devices.
-        leftFrontDrive  = hardwareMap.get(DcMotor.class, "lf");
-        leftBackDrive  = hardwareMap.get(DcMotor.class, "lb");
-        rightFrontDrive = hardwareMap.get(DcMotor.class, "rf");
-        rightBackDrive = hardwareMap.get(DcMotor.class, "rb");
-
-        // ########################################################################################
-        // !!!            IMPORTANT Drive Information. Test your motor directions.            !!!!!
-        // ########################################################################################
-        // Most robots need the motors on one side to be reversed to drive forward.
-        // The motor reversals shown here are for a "direct drive" robot (the wheels turn the same direction as the motor shaft)
-        // If your robot has additional gear reductions or uses a right-angled drive, it's important to ensure
-        // that your motors are turning in the correct direction.  So, start out with the reversals here, BUT
-        // when you first test your robot, push the left joystick forward and observe the direction the wheels turn.
-        // Reverse the direction (flip FORWARD <-> REVERSE ) of any wheel that runs backward
-        // Keep testing until ALL the wheels move the robot forward when you push the left joystick forward.
-        leftFrontDrive.setDirection(DcMotor.Direction.REVERSE);
-        leftBackDrive.setDirection(DcMotor.Direction.REVERSE);
-        rightFrontDrive.setDirection(DcMotor.Direction.FORWARD);
-        rightBackDrive.setDirection(DcMotor.Direction.FORWARD);
-
+        robot.init(hardwareMap);
         // Wait for the game to start (driver presses START)
         telemetry.addData("Status", "Initialized");
         telemetry.update();
@@ -152,10 +130,10 @@ public class Teleop extends LinearOpMode {
             scaleFactor *= Math.max(Math.abs(1 - gamepad1.right_trigger), .2);
 
             // Send calculated power to wheels
-            leftFrontDrive.setPower(leftFrontPower * scaleFactor);
-            rightFrontDrive.setPower(rightFrontPower * scaleFactor);
-            leftBackDrive.setPower(leftBackPower * scaleFactor);
-            rightBackDrive.setPower(rightBackPower * scaleFactor);
+            robot.lf.setPower(leftFrontPower * scaleFactor);
+            robot.rf.setPower(rightFrontPower * scaleFactor);
+            robot.lb.setPower(leftBackPower * scaleFactor);
+            robot.rb.setPower(rightBackPower * scaleFactor);
 
             // Show the elapsed game time and wheel power.
             telemetry.addData("Status", "Run Time: " + runtime.toString());
