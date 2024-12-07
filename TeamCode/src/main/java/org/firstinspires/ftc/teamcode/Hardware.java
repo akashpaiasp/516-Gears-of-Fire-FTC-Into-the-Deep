@@ -31,16 +31,26 @@ public class Hardware {
     public DcMotor rb;
     public DcMotor lf;
     public DcMotor lb;
-    public DcMotor vertLift;
+    //public DcMotor vertLift;
     public Servo horiLift;
     //public CRServo wheel1;
     //public DcMotorEx liftExtender;
     public Servo claw;
     //public Servo claw2;
 
+    public Servo angleCorrector;
+
 
     private static Hardware myInstance = null;
     public double maxSpeed = 1;
+
+    public final double CLAW_CLOSE = 0.41;
+    public final double CLAW_OPEN = 0.3;
+
+    public final double HORIZONTAL_IN = 0.73;
+    public final double HORIZONTAL_OUT = 0.39;
+    public final double ANGLE_UP = 0.7;
+    public final double ANGLE_DOWN = 0.21;
 
     public Hardware() {}
 
@@ -53,12 +63,12 @@ public class Hardware {
 
     public void init(HardwareMap hwMap) {
 
-        vertLift = hwMap.get(DcMotor.class,"lift");
-        vertLift.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
-        //lift.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-        vertLift.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        //vertLift = hwMap.get(DcMotor.class,"lift");
+        //vertLift.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        //vertLift.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        //vertLift.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         //lift.setDirection(DcMotorSimple.Direction.REVERSE);
-        vertLift.setPower(0);
+        //vertLift.setPower(0);
 
         rf = hwMap.get(DcMotor.class, "rf");
         //rf.setDirection(DcMotorSimple.Direction.REVERSE);
@@ -68,7 +78,7 @@ public class Hardware {
         rf.setPower(0);
 
         lf = hwMap.get(DcMotor.class, "lf");
-        //rf.setDirection(DcMotorSimple.Direction.REVERSE);
+        lf.setDirection(DcMotorSimple.Direction.REVERSE);
         lf.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         //rf.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         lf.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
@@ -82,15 +92,64 @@ public class Hardware {
         rb.setPower(0);
 
         horiLift = hwMap.get(Servo.class, "horilift");
+        horiLift.setPosition(HORIZONTAL_IN);
         claw = hwMap.get(Servo.class, "claw");
+        claw.setPosition(CLAW_OPEN);
 
         lb = hwMap.get(DcMotor.class, "lb");
-        //rf.setDirection(DcMotorSimple.Direction.REVERSE);
+        lb.setDirection(DcMotorSimple.Direction.REVERSE);
         lb.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         //rf.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         lb.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         lb.setPower(0);
 
+        angleCorrector = hwMap.get(Servo.class, "angle");
+        angleCorrector.setPosition(ANGLE_UP);
+
+    }
+    public void initAuto(HardwareMap hwMap) {
+        //vertLift = hwMap.get(DcMotor.class,"lift");
+        //vertLift.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        //vertLift.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        //vertLift.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        //lift.setDirection(DcMotorSimple.Direction.REVERSE);
+        //vertLift.setPower(0);
+
+        rf = hwMap.get(DcMotor.class, "rf");
+        //rf.setDirection(DcMotorSimple.Direction.REVERSE);
+        rf.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        rf.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        //rf.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        rf.setPower(0);
+
+        lf = hwMap.get(DcMotor.class, "lf");
+        lf.setDirection(DcMotorSimple.Direction.REVERSE);
+        lf.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        lf.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        //lf.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        lf.setPower(0);
+
+        rb = hwMap.get(DcMotor.class, "rb");
+        //rf.setDirection(DcMotorSimple.Direction.REVERSE);
+        rb.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        rb.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        //rb.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        rb.setPower(0);
+
+        horiLift = hwMap.get(Servo.class, "horilift");
+        horiLift.setPosition(HORIZONTAL_IN);
+        claw = hwMap.get(Servo.class, "claw");
+        claw.setPosition(CLAW_OPEN);
+
+        lb = hwMap.get(DcMotor.class, "lb");
+        lb.setDirection(DcMotorSimple.Direction.REVERSE);
+        lb.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        lb.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        //lb.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        lb.setPower(0);
+
+        angleCorrector = hwMap.get(Servo.class, "angle");
+        angleCorrector.setPosition(ANGLE_UP);
     }
 
     public void setPower(double fr, double br, double fl, double bl) {
@@ -101,7 +160,7 @@ public class Hardware {
     }
 
     public void liftsetPower(double apow) {
-        vertLift.setPower(apow);
+        //vertLift.setPower(apow);
     }
 
     public void setclaw1Pos(double pos) {

@@ -73,10 +73,15 @@ public class Teleop extends LinearOpMode {
     private ElapsedTime runtime = new ElapsedTime();
     private double scaleFactor;
     boolean pressingRB = false;
+    boolean pressingY = false;
+    boolean pressingA = false;
+    boolean clawOpen = true;
+    boolean angleUp = true;
+    boolean horiIn = true;
 
     @Override
     public void runOpMode() {
-
+        robot = new Hardware();
         robot.init(hardwareMap);
         // Wait for the game to start (driver presses START)
         telemetry.addData("Status", "Initialized");
@@ -143,11 +148,39 @@ public class Teleop extends LinearOpMode {
             telemetry.update();
 
             if(gamepad2.right_bumper && !pressingRB) {
-                robot.claw.setPosition(0.5);
+                if(!clawOpen)
+                    robot.claw.setPosition(robot.CLAW_OPEN);
+                else
+                    robot.claw.setPosition(robot.CLAW_CLOSE);
                 pressingRB = true;
-            } else if(!gamepad2.right_bumper) {
-                robot.claw.setPosition(0);
+                clawOpen = !clawOpen;
+            }
+            else {
                 pressingRB = false;
+            }
+
+            if(gamepad2.y && !pressingY) {
+                if(!horiIn)
+                    robot.horiLift.setPosition(robot.HORIZONTAL_IN);
+                else
+                    robot.horiLift.setPosition(robot.HORIZONTAL_OUT);
+                pressingRB = true;
+                horiIn = !horiIn;
+            }
+            else {
+                pressingY = false;
+            }
+
+            if(gamepad2.a && !pressingA) {
+                if (!angleUp)
+                    robot.angleCorrector.setPosition(robot.ANGLE_UP);
+                else
+                    robot.angleCorrector.setPosition(robot.ANGLE_DOWN);
+                pressingA = true;
+                angleUp = !angleUp;
+            }
+            else {
+                pressingA = false;
             }
 
         }
