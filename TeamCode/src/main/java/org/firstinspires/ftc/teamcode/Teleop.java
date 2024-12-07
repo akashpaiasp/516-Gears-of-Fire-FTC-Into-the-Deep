@@ -183,5 +183,11 @@ public class Teleop extends LinearOpMode {
                 pressingA = false;
             }
 
+            if(gamepad2.left_stick_y > 0)
+                    robot.vertLift.setPower(.75);
+            else if(gamepad2.left_stick_y < 0)
+                    robot.vertLift.setPower(-.75);
+            else robot.vertLift.setPower(0);
+
         }
     }}

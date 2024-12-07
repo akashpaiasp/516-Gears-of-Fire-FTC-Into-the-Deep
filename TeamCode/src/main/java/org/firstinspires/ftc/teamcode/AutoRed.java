@@ -32,6 +32,9 @@ public class AutoRed extends LinearOpMode {
         robot = new Hardware();
         robot.initAuto(hardwareMap);
         waitForStart();
+        Forward(2000, .5);
+        sleep(2000);
+        robot.resetMotors();
 
 
     }
@@ -64,12 +67,12 @@ public class AutoRed extends LinearOpMode {
 
 
 
-        robot.setPower(0, 0, 0, 0);
+       /* robot.setPower(0, 0, 0, 0);
 
         robot.lf.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         robot.lb.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         robot.rf.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        robot.rb.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        robot.rb.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER); */
     }
 
     public void TurnLeft(int encoderPosition, double turnSpeed) {
@@ -108,7 +111,7 @@ public class AutoRed extends LinearOpMode {
             telemetry.addData("lb", robot.lb.getPower());
             telemetry.addData("rb", robot.rb.getPower());
             telemetry.update(); */
-
+            /*
             robot.rf.setTargetPosition(encoderPosition);
             robot.lf.setTargetPosition(encoderPosition);
             robot.rb.setTargetPosition(encoderPosition);
@@ -117,18 +120,9 @@ public class AutoRed extends LinearOpMode {
             robot.rf.setMode(DcMotor.RunMode.RUN_TO_POSITION);
             robot.lf.setMode(DcMotor.RunMode.RUN_TO_POSITION);
             robot.rb.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-            robot.lb.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+            robot.lb.setMode(DcMotor.RunMode.RUN_TO_POSITION); */
 
 
-        robot.setPower(0, 0, 0, 0);
-
-        robot.rf.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        robot.lf.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        robot.rb.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        robot.lb.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-
-        robot.lf.setDirection(DcMotorSimple.Direction.REVERSE);
-        robot.lb.setDirection(DcMotorSimple.Direction.REVERSE);
     }
 
     public void TurnRight(int encoderPosition, double TurnSpeed) {
@@ -162,15 +156,15 @@ public class AutoRed extends LinearOpMode {
         robot.rb.setMode(DcMotor.RunMode.RUN_TO_POSITION);
         robot.lb.setMode(DcMotor.RunMode.RUN_TO_POSITION);
     //}
+       /* robot.setPower(0, 0, 0, 0);
 
-        robot.setPower(0, 0, 0, 0);
-
-        robot.rf.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+            robot.rf.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         robot.lf.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         robot.rb.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         robot.lb.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
 
         robot.rf.setDirection(DcMotorSimple.Direction.FORWARD);
-        robot.rb.setDirection(DcMotorSimple.Direction.FORWARD);
+        robot.rb.setDirection(DcMotorSimple.Direction.FORWARD); */
+
     }
 }

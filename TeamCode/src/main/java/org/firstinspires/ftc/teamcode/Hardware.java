@@ -31,7 +31,7 @@ public class Hardware {
     public DcMotor rb;
     public DcMotor lf;
     public DcMotor lb;
-    //public DcMotor vertLift;
+    public DcMotor vertLift;
     public Servo horiLift;
     //public CRServo wheel1;
     //public DcMotorEx liftExtender;
@@ -108,12 +108,12 @@ public class Hardware {
 
     }
     public void initAuto(HardwareMap hwMap) {
-        //vertLift = hwMap.get(DcMotor.class,"lift");
-        //vertLift.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
-        //vertLift.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-        //vertLift.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        vertLift = hwMap.get(DcMotor.class,"lift");
+        vertLift.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        vertLift.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        vertLift.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         //lift.setDirection(DcMotorSimple.Direction.REVERSE);
-        //vertLift.setPower(0);
+        vertLift.setPower(0);
 
         rf = hwMap.get(DcMotor.class, "rf");
         //rf.setDirection(DcMotorSimple.Direction.REVERSE);
@@ -165,6 +165,20 @@ public class Hardware {
 
     public void setclaw1Pos(double pos) {
         claw.setPosition(pos);
+    }
+
+    public void resetMotors() {
+        setPower(0, 0, 0, 0);
+
+        rf.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        lf.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        rb.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        lb.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+
+        lf.setDirection(DcMotorSimple.Direction.REVERSE);
+        lb.setDirection(DcMotorSimple.Direction.REVERSE);
+        rf.setDirection(DcMotorSimple.Direction.FORWARD);
+        rb.setDirection(DcMotorSimple.Direction.FORWARD);
     }
 
 }
