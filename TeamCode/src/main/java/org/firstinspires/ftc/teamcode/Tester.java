@@ -16,6 +16,10 @@ public class Tester extends LinearOpMode {
         robot.rf.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         robot.lb.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         robot.lf.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        robot.rb.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.FLOAT);
+        robot.rf.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.FLOAT);
+        robot.lb.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.FLOAT);
+        robot.lf.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.FLOAT);
         //robot.vertLift.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
 
         boolean pressingRB = false;
@@ -27,11 +31,18 @@ public class Tester extends LinearOpMode {
         boolean pressingB = false;
         boolean pressingX = false;
         boolean pressingY = false;
+
         waitForStart();
         while (opModeIsActive()) {
             telemetry.addData("claw pos", robot.claw.getPosition());
-            telemetry.addData("horizontal lift pos", robot.horiLift.getPosition());
-            telemetry.addData("angle corrector pos", robot.angleCorrector.getPosition());
+            telemetry.addData("horizontal lift pos", robot.horiLiftL.getPosition());
+            telemetry.addData("angle corrector pos", robot.clawExtenderL.getPosition());
+            telemetry.addData("lf", robot.lf.getCurrentPosition());
+            telemetry.addData("rf", robot.rf.getCurrentPosition());
+            telemetry.addData("lb", robot.lb.getCurrentPosition());
+            telemetry.addData("rb", robot.rf.getCurrentPosition());
+
+
             telemetry.update();
             if(gamepad2.right_bumper && !pressingRB) {
                 pos1 += 0.01;
@@ -49,28 +60,28 @@ public class Tester extends LinearOpMode {
             }
             if(gamepad2.a && !pressingA) {
                 pos2 += 0.01;
-                robot.horiLift.setPosition(pos2);
+                robot.horiLiftL.setPosition(pos2);
                 pressingA = true;
             } else if(!gamepad2.a) {
                 pressingA = false;
             }
             if(gamepad2.b && !pressingB) {
                 pos2 -= 0.01;
-                robot.horiLift.setPosition(pos2);
+                robot.horiLiftL.setPosition(pos2);
                 pressingB = true;
             } else if(!gamepad2.b) {
                 pressingB = false;
             }
             if(gamepad2.x && !pressingX) {
                 pos3 += 0.01;
-                robot.angleCorrector.setPosition(pos3);
+                robot.clawExtenderL.setPosition(pos3);
                 pressingX = true;
             } else if(!gamepad2.x) {
                 pressingX = false;
             }
             if(gamepad2.y && !pressingY) {
                 pos3 -= 0.01;
-                robot.angleCorrector.setPosition(pos3);
+                robot.clawExtenderL.setPosition(pos3);
                 pressingY = true;
             } else if(!gamepad2.y) {
                 pressingY = false;

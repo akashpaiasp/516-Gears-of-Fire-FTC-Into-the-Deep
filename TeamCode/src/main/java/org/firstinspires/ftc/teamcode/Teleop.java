@@ -29,7 +29,8 @@
 
 package org.firstinspires.ftc.teamcode;
 
-import com.qualcomm.robotcore.eventloop.opmode.Disabled;
+import android.annotation.SuppressLint;
+
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
@@ -76,9 +77,22 @@ public class Teleop extends LinearOpMode {
     boolean pressingY = false;
     boolean pressingA = false;
     boolean clawOpen = true;
-    boolean angleUp = true;
+    boolean extenderDown = false;
     boolean horiIn = true;
+    boolean slideIn = true;
+    boolean manual = true;
+    boolean pressingX = false;
+    boolean pressingLT = false;
+    boolean pressingRT = false;
+    boolean pressingLB = false;
+    boolean pressingDpad = false;
+    boolean timer = false;
+    boolean timer2 = false;
+    double time = 0;
+    boolean rung = true;
+    boolean pressingBack = false;
 
+    @SuppressLint("SuspiciousIndentation")
     @Override
     public void runOpMode() {
         robot = new Hardware();
@@ -93,14 +107,14 @@ public class Teleop extends LinearOpMode {
         while (opModeIsActive()) {
             double max;
 
-            double axial   = -gamepad1.left_stick_y;
-            double lateral =  gamepad1.left_stick_x;
-            double yaw     =  gamepad1.right_stick_x;
+            double axial = -gamepad1.left_stick_y;
+            double lateral = gamepad1.left_stick_x;
+            double yaw = gamepad1.right_stick_x;
 
-            double leftFrontPower  = axial + lateral + yaw;
+            double leftFrontPower = axial + lateral + yaw;
             double rightFrontPower = axial - lateral - yaw;
-            double leftBackPower   = axial - lateral + yaw;
-            double rightBackPower  = axial + lateral - yaw;
+            double leftBackPower = axial - lateral + yaw;
+            double rightBackPower = axial + lateral - yaw;
 
             // Normalize the values so no wheel power exceeds 100%
             // This ensures that the robot maintains the desired motion.
@@ -109,10 +123,10 @@ public class Teleop extends LinearOpMode {
             max = Math.max(max, Math.abs(rightBackPower));
 
             if (max > 1.0) {
-                leftFrontPower  /= max;
+                leftFrontPower /= max;
                 rightFrontPower /= max;
-                leftBackPower   /= max;
-                rightBackPower  /= max;
+                leftBackPower /= max;
+                rightBackPower /= max;
             }
 
             // This is test code:
@@ -145,49 +159,193 @@ public class Teleop extends LinearOpMode {
             telemetry.addData("Status", "Run Time: " + runtime.toString());
             telemetry.addData("Front left/Right", "%4.2f, %4.2f", leftFrontPower, rightFrontPower);
             telemetry.addData("Back  left/Right", "%4.2f, %4.2f", leftBackPower, rightBackPower);
+            telemetry.addData("Vert lift power", robot.vertLift.getPower());
+            telemetry.addData("Vert lift pos", robot.vertLift.getCurrentPosition());
             telemetry.update();
 
-            if(gamepad2.right_bumper && !pressingRB) {
-                if(!clawOpen)
-                    robot.claw.setPosition(robot.CLAW_OPEN);
-                else
+            if (gamepad2.right_bumper && !pressingRB) { //&& !pressingRB) {
+                pressingRB = true;
+                if (clawOpen)
                     robot.claw.setPosition(robot.CLAW_CLOSE);
+                else
+                    robot.claw.setPosition(robot.CLAW_OPEN);
                 pressingRB = true;
                 clawOpen = !clawOpen;
+
             }
-            else {
+            else if(!gamepad2.right_bumper) {
                 pressingRB = false;
             }
+            //}
+            /*else {
+                pressingRB = false;
+            } */
 
-            if(gamepad2.y && !pressingY) {
-                if(!horiIn)
-                    robot.horiLift.setPosition(robot.HORIZONTAL_IN);
-                else
-                    robot.horiLift.setPosition(robot.HORIZONTAL_OUT);
-                pressingRB = true;
+            if (gamepad2.y && !pressingY) {
+                pressingY = true;
+                if (horiIn) {
+                    robot.horiLiftL.setPosition(robot.HORIZONTAL_LEFT_OUT);
+                    robot.horiLiftR.setPosition(robot.HORIZONTAL_RIGHT_OUT);
+
+                }
+                else {
+                    robot.horiLiftL.setPosition(robot.HORIZONTAL_LEFT_IN);
+                    robot.horiLiftR.setPosition(robot.HORIZONTAL_RIGHT_IN);
+                }
                 horiIn = !horiIn;
             }
-            else {
+            else if (!gamepad2.y) {
                 pressingY = false;
             }
 
-            if(gamepad2.a && !pressingA) {
-                if (!angleUp)
-                    robot.angleCorrector.setPosition(robot.ANGLE_UP);
-                else
-                    robot.angleCorrector.setPosition(robot.ANGLE_DOWN);
+            if (gamepad2.a && !pressingA) {// && !pressingA) {
                 pressingA = true;
-                angleUp = !angleUp;
+                if (!extenderDown) {
+                    robot.clawExtenderL.setPosition(robot.EXTENDER_L_DOWN);
+                    robot.clawExtenderR.setPosition(robot.EXTENDER_R_DOWN);
+
+                }
+                else {
+                    robot.clawExtenderL.setPosition(robot.EXTENDER_L_MIDDLE);
+                    robot.clawExtenderR.setPosition(robot.EXTENDER_R_MIDDLE);
+                }
+                    extenderDown = !extenderDown;
             }
-            else {
+            else if (!gamepad2.a) {
                 pressingA = false;
             }
 
-            if(gamepad2.left_stick_y > 0)
-                    robot.vertLift.setPower(.75);
-            else if(gamepad2.left_stick_y < 0)
-                    robot.vertLift.setPower(-.75);
-            else robot.vertLift.setPower(0);
+            if (gamepad2.b && !pressingLT) {
+                pressingLT = true;
+                extenderDown = false;
+                robot.clawExtenderL.setPosition(robot.EXTENDER_L_UP);
+                robot.clawExtenderR.setPosition(robot.EXTENDER_R_UP);
+            }
+            else if (!gamepad2.b) pressingLT = false;
+
+            if (gamepad2.dpad_down && !pressingDpad) {
+                pressingDpad = true;
+                robot.angle.setPosition(robot.ANGLE_SIDEWAYS);
+            }
+            else if (gamepad2.dpad_up && !pressingDpad) {
+                pressingDpad = true;
+                robot.angle.setPosition(robot.ANGLE_FORWARD);
+            }
+            else if (gamepad2.dpad_left && !pressingDpad) {
+                pressingDpad = true;
+                robot.angle.setPosition(robot.ANGLE_L);
+            }
+            else if (gamepad2.dpad_right && !pressingDpad) {
+                pressingDpad = true;
+                robot.angle.setPosition(robot.ANGLE_R);
+            }
+            else if (!gamepad2.dpad_right && !gamepad2.dpad_up && !gamepad2.dpad_left && !gamepad2.dpad_down) {
+                pressingDpad = false;
+            }
+
+            if (gamepad2.x && !pressingX) {
+                pressingX = true;
+                manual = false;
+                if (rung)
+                    robot.vertLift.setTargetPosition(robot.RUNG);
+                else
+                    robot.vertLift.setTargetPosition(robot.RUNG_DOWN);
+                robot.vertLift.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+                robot.vertLift.setPower(1);
+                rung = !rung;
+            }
+            else if (!gamepad2.x) {
+                pressingX = false;
+            }
+
+            //else {
+            //    pressingA = false;
+            //}
+
+
+            if (gamepad2.left_stick_y > 0) {
+                robot.vertLift.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+                robot.vertLift.setPower(Math.min(gamepad2.left_stick_y * 1.2, 1));
+                manual = true;
+            }
+            else if (gamepad2.left_stick_y < 0) {
+                robot.vertLift.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+                robot.vertLift.setPower(Math.max(gamepad2.left_stick_y * 1.2, -1));
+                manual = true;
+            }
+            else if(manual) robot.vertLift.setPower(0);
+
+            if (gamepad2.left_trigger > 0.5 && !pressingLT) {
+                manual = false;
+                pressingLT = true;
+                robot.vertLift.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+                robot.vertLift.setTargetPosition(robot.SUBMERSIBLE_PICKUP);
+                robot.vertLift.setPower(1);
+                robot.horiLiftR.setPosition(robot.HORIZONTAL_RIGHT_OUT);
+                robot.horiLiftL.setPosition(robot.HORIZONTAL_LEFT_OUT);
+                robot.clawExtenderL.setPosition(robot.EXTENDER_L_DOWN);
+                robot.clawExtenderR.setPosition(robot.EXTENDER_R_DOWN);
+                extenderDown = true;
+            }
+            else if(gamepad2.left_trigger < .5) pressingLT = false;
+
+            if (gamepad2.right_trigger > 0.5 && !pressingRT) {
+                robot.claw.setPosition(robot.CLAW_OPEN);
+                clawOpen = true;
+                robot.vertLift.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+                robot.vertLift.setTargetPosition(0);
+                robot.vertLift.setPower(1);
+                pressingRT = true;
+                manual = false;
+                timer = true;
+                time = getRuntime();
+            }
+            else if(gamepad2.right_trigger < .5) {
+                pressingRT = false;
+            }
+
+            if (timer && getRuntime() > time + .2) {
+                manual = false;
+                timer = false;
+                robot.claw.setPosition(robot.CLAW_CLOSE);
+                clawOpen = false;
+                time = getRuntime();
+                timer2 = true;
+            }
+            if (timer2 && getRuntime() > time + .1) {
+                timer2 = false;
+                manual = false;
+                robot.vertLift.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+                robot.vertLift.setTargetPosition(robot.SUBMERSIBLE_PICKUP);
+                robot.vertLift.setPower(1);
+            }
+
+            if (gamepad2.left_bumper && !pressingLB) {
+                manual = false;
+                pressingLB = true;
+                robot.vertLift.setPower(1);
+                robot.vertLift.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+                robot.vertLift.setTargetPosition(0);
+                robot.horiLiftR.setPosition(robot.HORIZONTAL_RIGHT_IN);
+                robot.horiLiftL.setPosition(robot.HORIZONTAL_LEFT_IN);
+            }
+            else if (!gamepad2.left_bumper) {
+                pressingLB = false;
+            }
+
+            if (gamepad2.back && !pressingBack) {
+                robot.vertLift.setPower(1);
+                robot.vertLift.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+                robot.vertLift.setTargetPosition(robot.WALL);
+                robot.horiLiftR.setPosition(robot.HORIZONTAL_RIGHT_OUT);
+                robot.horiLiftL.setPosition(robot.HORIZONTAL_LEFT_OUT);
+                robot.clawExtenderL.setPosition(robot.EXTENDER_L_MIDDLE);
+                robot.clawExtenderR.setPosition(robot.EXTENDER_R_MIDDLE);
+                extenderDown = false;
+                robot.claw.setPosition(robot.CLAW_OPEN);
+                clawOpen = true;
+            }
 
         }
-    }}
+        }
+    }

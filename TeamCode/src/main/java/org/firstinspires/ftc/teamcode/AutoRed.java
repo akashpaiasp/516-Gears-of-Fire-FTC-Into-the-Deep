@@ -30,11 +30,12 @@ public class AutoRed extends LinearOpMode {
 
     public void runOpMode() throws InterruptedException {
         robot = new Hardware();
-        robot.initAuto(hardwareMap);
+        robot.init(hardwareMap);
+        robot.claw.setPosition(robot.CLAW_CLOSE);
         waitForStart();
-        Forward(2000, .5);
-        sleep(2000);
-        robot.resetMotors();
+        robot.setPower(-.5, -.5, -.5, -.5);
+        sleep(1000);
+        robot.setPower(0, 0, 0, 0);
 
 
     }
