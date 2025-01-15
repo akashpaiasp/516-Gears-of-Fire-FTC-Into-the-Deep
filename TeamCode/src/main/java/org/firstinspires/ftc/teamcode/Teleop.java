@@ -66,7 +66,7 @@ import com.qualcomm.robotcore.util.ElapsedTime;
 
 
 
-@TeleOp(name="Teleop", group="Linear OpMode")
+@TeleOp(name="The 420 point teleop program", group="Linear OpMode")
 public class Teleop extends LinearOpMode {
     private Hardware robot;
 
@@ -147,7 +147,7 @@ public class Teleop extends LinearOpMode {
             */
 
             scaleFactor = 1;
-            scaleFactor *= Math.max(Math.abs(1 - gamepad1.right_trigger), .2);
+            scaleFactor *= Math.max(Math.abs(1 - gamepad1.right_trigger), .4);
 
             // Send calculated power to wheels
             robot.lf.setPower(leftFrontPower * scaleFactor);
@@ -156,12 +156,12 @@ public class Teleop extends LinearOpMode {
             robot.rb.setPower(rightBackPower * scaleFactor);
 
             // Show the elapsed game time and wheel power.
-            telemetry.addData("Status", "Run Time: " + runtime.toString());
+            /*telemetry.addData("Status", "Run Time: " + runtime.toString());
             telemetry.addData("Front left/Right", "%4.2f, %4.2f", leftFrontPower, rightFrontPower);
             telemetry.addData("Back  left/Right", "%4.2f, %4.2f", leftBackPower, rightBackPower);
             telemetry.addData("Vert lift power", robot.vertLift.getPower());
             telemetry.addData("Vert lift pos", robot.vertLift.getCurrentPosition());
-            telemetry.update();
+            telemetry.update(); */
 
             if (gamepad2.right_bumper && !pressingRB) { //&& !pressingRB) {
                 pressingRB = true;
@@ -176,6 +176,7 @@ public class Teleop extends LinearOpMode {
             else if(!gamepad2.right_bumper) {
                 pressingRB = false;
             }
+
             //}
             /*else {
                 pressingRB = false;
@@ -252,6 +253,10 @@ public class Teleop extends LinearOpMode {
                     robot.vertLift.setTargetPosition(robot.RUNG_DOWN);
                 robot.vertLift.setMode(DcMotor.RunMode.RUN_TO_POSITION);
                 robot.vertLift.setPower(1);
+                robot.angle.setPosition(robot.ANGLE_SIDEWAYS);
+                robot.clawExtenderL.setPosition(robot.EXTENDER_L_MIDDLE);
+                robot.clawExtenderR.setPosition(robot.EXTENDER_R_MIDDLE);
+                extenderDown = false;
                 rung = !rung;
             }
             else if (!gamepad2.x) {
@@ -328,6 +333,11 @@ public class Teleop extends LinearOpMode {
                 robot.vertLift.setTargetPosition(0);
                 robot.horiLiftR.setPosition(robot.HORIZONTAL_RIGHT_IN);
                 robot.horiLiftL.setPosition(robot.HORIZONTAL_LEFT_IN);
+                robot.angle.setPosition(robot.ANGLE_SIDEWAYS);
+                robot.clawExtenderL.setPosition(robot.EXTENDER_L_MIDDLE);
+                robot.clawExtenderR.setPosition(robot.EXTENDER_R_MIDDLE);
+                extenderDown = false;
+                horiIn = true;
             }
             else if (!gamepad2.left_bumper) {
                 pressingLB = false;
@@ -343,6 +353,7 @@ public class Teleop extends LinearOpMode {
                 robot.clawExtenderR.setPosition(robot.EXTENDER_R_MIDDLE);
                 extenderDown = false;
                 robot.claw.setPosition(robot.CLAW_OPEN);
+                robot.angle.setPosition(robot.ANGLE_SIDEWAYS);
                 clawOpen = true;
             }
 

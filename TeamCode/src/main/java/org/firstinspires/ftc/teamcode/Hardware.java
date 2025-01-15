@@ -1,5 +1,7 @@
 package org.firstinspires.ftc.teamcode;
 
+import com.pedropathing.follower.Follower;
+import com.pedropathing.localization.Pose;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.HardwareMap;
@@ -32,7 +34,7 @@ public class Hardware {
     private static Hardware myInstance = null;
     public double maxSpeed = 1;
 
-    public final double CLAW_CLOSE = .397;
+    public final double CLAW_CLOSE = .5;
     public final double CLAW_OPEN = .129;
 
     public final double HORIZONTAL_LEFT_OUT = .822;
@@ -42,9 +44,11 @@ public class Hardware {
     public final double EXTENDER_L_UP = .422;
     public final double EXTENDER_L_DOWN = .009;
     public final double EXTENDER_L_MIDDLE = .275;
+    public final double EXTENDER_L_FULL_UP = .65;
     public final double EXTENDER_R_UP = .363;
     public final double EXTENDER_R_DOWN = .78;
     public final double EXTENDER_R_MIDDLE = .521;
+    public final double EXTENDER_R_FULL_UP = .27;
     public final double ANGLE_FORWARD = .123;
     public final double ANGLE_SIDEWAYS = .416;
     public final double ANGLE_L = .273;
@@ -55,6 +59,7 @@ public class Hardware {
     public final int WALL = -375;
     public final int RUNG = -2550;
     public final int RUNG_DOWN = -1700;
+
 
 
 
@@ -124,8 +129,6 @@ public class Hardware {
 
         angle = hwMap.get(Servo.class, "angle");
         angle.setPosition(ANGLE_SIDEWAYS);
-
-
     }
 
 
