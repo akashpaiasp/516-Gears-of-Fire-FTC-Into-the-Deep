@@ -6,6 +6,7 @@ import com.acmerobotics.roadrunner.ftc.Actions;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 
 import org.firstinspires.ftc.teamcode.MecanumDrive;
+import org.firstinspires.ftc.teamcode.PinpointDrive;
 import org.firstinspires.ftc.teamcode.SparkFunOTOSDrive;
 import org.firstinspires.ftc.teamcode.TankDrive;
 
@@ -23,8 +24,8 @@ public final class SplineTest extends LinearOpMode {
                             .splineTo(new Vector2d(30, 30), Math.PI / 2)
                             .splineTo(new Vector2d(0, 60), Math.PI)
                             .build());
-        } else if (TuningOpModes.DRIVE_CLASS.equals(MecanumDrive.class)) {
-            MecanumDrive drive = new MecanumDrive(hardwareMap, beginPose);
+        } else if (TuningOpModes.DRIVE_CLASS.equals(PinpointDrive.class)) {
+            MecanumDrive drive = new PinpointDrive(hardwareMap, beginPose);
 
             waitForStart();
 
@@ -40,8 +41,8 @@ public final class SplineTest extends LinearOpMode {
 
             Actions.runBlocking(
                     drive.actionBuilder(beginPose)
-                            .splineTo(new Vector2d(30, 30), Math.PI / 2)
-                            .splineTo(new Vector2d(0, 60), Math.PI)
+                            .splineTo(new Vector2d(7.5, 7.5), Math.PI / 2)
+                            .splineTo(new Vector2d(0, 15), Math.PI)
                             .build());
         } else {
             throw new RuntimeException();

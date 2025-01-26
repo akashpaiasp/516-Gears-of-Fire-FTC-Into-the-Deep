@@ -35,8 +35,8 @@ public class Tester extends LinearOpMode {
         waitForStart();
         while (opModeIsActive()) {
             telemetry.addData("claw pos", robot.claw.getPosition());
-            telemetry.addData("horizontal lift pos", robot.horiLiftL.getPosition());
-            telemetry.addData("angle corrector pos", robot.clawExtenderL.getPosition());
+            telemetry.addData("horizontal lift l", robot.horiLiftL.getPosition());
+            telemetry.addData("horizontal lift r", robot.horiLiftR.getPosition());
             telemetry.addData("lf", robot.lf.getCurrentPosition());
             telemetry.addData("rf", robot.rf.getCurrentPosition());
             telemetry.addData("lb", robot.lb.getCurrentPosition());
@@ -46,14 +46,14 @@ public class Tester extends LinearOpMode {
             telemetry.update();
             if(gamepad2.right_bumper && !pressingRB) {
                 pos1 += 0.01;
-                robot.claw.setPosition(pos1);
+                robot.horiLiftR.setPosition(pos1);
                 pressingRB = true;
             } else if(!gamepad2.right_bumper) {
                 pressingRB = false;
             }
             if(gamepad2.left_bumper && !pressingLB) {
                 pos1 -= 0.01;
-                robot.claw.setPosition(pos1);
+                robot.horiLiftR.setPosition(pos1);
                 pressingLB = true;
             } else if(!gamepad2.left_bumper) {
                 pressingLB = false;

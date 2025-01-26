@@ -1,7 +1,6 @@
 package org.firstinspires.ftc.teamcode;
 
-import com.pedropathing.follower.Follower;
-import com.pedropathing.localization.Pose;
+
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.HardwareMap;
@@ -37,10 +36,10 @@ public class Hardware {
     public final double CLAW_CLOSE = .5;
     public final double CLAW_OPEN = .129;
 
-    public final double HORIZONTAL_LEFT_OUT = .822;
-    public final double HORIZONTAL_LEFT_IN = .2;
-    public final double HORIZONTAL_RIGHT_OUT = .222;
-    public final double HORIZONTAL_RIGHT_IN = .78;
+    public final double HORIZONTAL_LEFT_OUT = .282;
+    public final double HORIZONTAL_LEFT_IN = .873;
+    public final double HORIZONTAL_RIGHT_OUT = .777;
+    public final double HORIZONTAL_RIGHT_IN = .034;
     public final double EXTENDER_L_UP = .422;
     public final double EXTENDER_L_DOWN = .009;
     public final double EXTENDER_L_MIDDLE = .275;
@@ -159,6 +158,15 @@ public class Hardware {
         lb.setDirection(DcMotorSimple.Direction.REVERSE);
         rf.setDirection(DcMotorSimple.Direction.FORWARD);
         rb.setDirection(DcMotorSimple.Direction.FORWARD);
+    }
+
+    public void horizontalIn() {
+        horiLiftL.setPosition(HORIZONTAL_LEFT_IN);
+        horiLiftR.setPosition(HORIZONTAL_RIGHT_IN);
+    }
+    public void horizontalOut() {
+        horiLiftL.setPosition(HORIZONTAL_LEFT_OUT);
+        horiLiftR.setPosition(HORIZONTAL_RIGHT_OUT);
     }
 
 }
