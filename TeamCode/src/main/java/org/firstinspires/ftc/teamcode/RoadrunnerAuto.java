@@ -1,22 +1,20 @@
 package org.firstinspires.ftc.teamcode;
 
+import com.acmerobotics.roadrunner.*;
+import com.acmerobotics.roadrunner.ftc.Actions;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import androidx.annotation.NonNull;
 import com.acmerobotics.dashboard.config.Config;
 import com.acmerobotics.dashboard.telemetry.TelemetryPacket;
-import com.acmerobotics.roadrunner.Action;
-import com.acmerobotics.roadrunner.Pose2d;
-import com.acmerobotics.roadrunner.SequentialAction;
-import com.acmerobotics.roadrunner.Vector2d;
-import com.acmerobotics.roadrunner.ftc.Actions;
+import java.lang.Math;
 
 @Config
 @Autonomous(name="RoadrunnerAuto")
 public class RoadrunnerAuto extends LinearOpMode {
     Hardware robot;
-    public class Actions {
+    public class ActionsL {
         public class GroundPickup implements Action {
             @Override
             public boolean run(@NonNull TelemetryPacket telemetryPacket) {
@@ -30,11 +28,48 @@ public class RoadrunnerAuto extends LinearOpMode {
         }
     }
     public void runOpMode() {
+        Pose2d initialPose = new Pose2d(0, 0, Math.toRadians(0));
+        MecanumDrive drive = new PinpointDrive(hardwareMap, initialPose);
         robot = new Hardware();
         robot.init(hardwareMap);
         robot.clawExtenderR.setPosition(robot.EXTENDER_R_FULL_UP);
         robot.clawExtenderL.setPosition(robot.EXTENDER_L_FULL_UP);
         robot.claw.setPosition(robot.CLAW_CLOSE);
+
+
+
+        TrajectoryActionBuilder tab1 = drive.actionBuilder(initialPose)
+                .lineToX(20.85)
+                .waitSeconds(2.5)
+                //.setTangent(Math.toRadians(-82.45))
+                //.line
+                //.lineToYLinearHeading(-14.49, Math.toRadians(-82.45))
+                .setTangent(0)
+                .splineToSplineHeading(new Pose2d(11.49, -14.84 , -74.25), Math.toRadians(-74.25))
+                .waitSeconds(2.5)
+                .splineTo(new Vector2d(20.85, 0), 0)
+                .waitSeconds(2.5)
+                .splineTo(new Vector2d(25.62, -14.36), Math.toRadians(-86.01))
+                .waitSeconds(2.5)
+                .splineTo(new Vector2d(20.85, 0), 0)
+                .waitSeconds(2.5)
+                .splineTo(new Vector2d(28.13, -16.51), Math.toRadians(-65.68))
+                .waitSeconds(2.5)
+                .splineTo(new Vector2d(20.85, 0), 0)
+                .waitSeconds(2.5);
+        Action trajectoryActionCloseOut = tab1.endTrajectory().fresh()
+                .splineTo(new Vector2d(-2.58, -59.71), Math.toRadians(59.95))
+                .build();
         waitForStart();
+        // actionBuilder builds from the drive steps passed to it
+
+
+        Action trajectoryActionChosen = tab1.build();
+        Actions.runBlocking(
+                new SequentialAction(
+                        trajectoryActionChosen,
+                        trajectoryActionCloseOut
+                )
+        );
     }
 }

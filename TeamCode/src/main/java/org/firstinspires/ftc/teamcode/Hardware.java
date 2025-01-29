@@ -18,6 +18,7 @@ public class Hardware {
     public DcMotor lf;
     public DcMotor lb;
     public DcMotor vertLift;
+    public DcMotor hang;
     public Servo horiLiftL;
     public Servo horiLiftR;
 
@@ -36,28 +37,32 @@ public class Hardware {
     public final double CLAW_CLOSE = .5;
     public final double CLAW_OPEN = .129;
 
-    public final double HORIZONTAL_LEFT_OUT = .282;
-    public final double HORIZONTAL_LEFT_IN = .873;
-    public final double HORIZONTAL_RIGHT_OUT = .777;
-    public final double HORIZONTAL_RIGHT_IN = .034;
-    public final double EXTENDER_L_UP = .422;
-    public final double EXTENDER_L_DOWN = .009;
-    public final double EXTENDER_L_MIDDLE = .275;
-    public final double EXTENDER_L_FULL_UP = .65;
-    public final double EXTENDER_R_UP = .363;
-    public final double EXTENDER_R_DOWN = .78;
-    public final double EXTENDER_R_MIDDLE = .521;
-    public final double EXTENDER_R_FULL_UP = .27;
-    public final double ANGLE_FORWARD = .123;
-    public final double ANGLE_SIDEWAYS = .416;
-    public final double ANGLE_L = .273;
-    public final double ANGLE_R = .63;
+    public final double HORIZONTAL_LEFT_OUT = .31;
+    public final double HORIZONTAL_LEFT_IN = .78;
+    public final double HORIZONTAL_RIGHT_OUT = .89;
+    public final double HORIZONTAL_RIGHT_IN = .41;
+    public final double EXTENDER_L_UP = .115;
+    public final double EXTENDER_L_DOWN = .691;
+    public final double EXTENDER_L_MIDDLE = .387;
+    public final double EXTENDER_L_FULL_UP = 0;
+    public final double EXTENDER_R_UP = .635;
+    public final double EXTENDER_R_DOWN = .051;
+    public final double EXTENDER_R_MIDDLE = .353;
+    public final double EXTENDER_R_FULL_UP = .750;
+    public final double ANGLE_FORWARD = .455;
+    public final double ANGLE_SIDEWAYS = .167;
+    public final double ANGLE_L = .643;
+    public final double ANGLE_R = .303;
     public final int SUBMERSIBLE_PICKUP = -300;
     public final int LOW_BASKET = -2800;
     public final int VERT_HIGH = -3096;
     public final int WALL = -375;
     public final int RUNG = -2550;
     public final int RUNG_DOWN = -1700;
+    public final int HANG_1 = 500;
+    public final int HANG_2 = 0;
+
+
 
 
 
@@ -128,6 +133,11 @@ public class Hardware {
 
         angle = hwMap.get(Servo.class, "angle");
         angle.setPosition(ANGLE_SIDEWAYS);
+
+        hang = hwMap.get(DcMotor.class, "hang");
+        hang.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        hang.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        hang.setPower(0);
     }
 
 

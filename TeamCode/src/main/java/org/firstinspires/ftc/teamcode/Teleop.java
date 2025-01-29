@@ -91,6 +91,8 @@ public class Teleop extends LinearOpMode {
     double time = 0;
     boolean rung = true;
     boolean pressingBack = false;
+    boolean pressingXG1 = false;
+    boolean pressingYG1 = false;
 
     @SuppressLint("SuspiciousIndentation")
     @Override
@@ -160,8 +162,9 @@ public class Teleop extends LinearOpMode {
             telemetry.addData("Front left/Right", "%4.2f, %4.2f", leftFrontPower, rightFrontPower);
             telemetry.addData("Back  left/Right", "%4.2f, %4.2f", leftBackPower, rightBackPower);
             telemetry.addData("Vert lift power", robot.vertLift.getPower());
-            telemetry.addData("Vert lift pos", robot.vertLift.getCurrentPosition());
-            telemetry.update(); */
+            telemetry.addData("Vert lift pos", robot.vertLift.getCurrentPosition()); */
+            telemetry.addData("Hang", robot.hang.getCurrentPosition());
+            telemetry.update();
 
             if (gamepad2.right_bumper && !pressingRB) { //&& !pressingRB) {
                 pressingRB = true;
@@ -357,6 +360,26 @@ public class Teleop extends LinearOpMode {
                 clawOpen = true;
             }
 
+            if (gamepad1.x && !pressingXG1) {
+                robot.hang.setTargetPosition(robot.HANG_1);
+                robot.hang.setPower(1);
+            }
+            else if (!gamepad1.x)
+                pressingXG1 = false;
+            if (gamepad1.y && !pressingYG1)
+                robot.hang.setTargetPosition(robot.HANG_2);
+
+            if (gamepad1.left_bumper) {
+                robot.hang.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+                robot.hang.setPower(0.2);
+            }
+            else if (gamepad1.right_bumper) {
+                robot.hang.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+                robot.hang.setPower(-0.2);
+            }
+            else {
+                robot.hang.setPower(0);
+            }
         }
         }
     }
