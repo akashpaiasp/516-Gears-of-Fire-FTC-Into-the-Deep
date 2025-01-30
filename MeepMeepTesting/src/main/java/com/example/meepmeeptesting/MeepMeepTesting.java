@@ -15,12 +15,29 @@ public class MeepMeepTesting {
                 .setConstraints(60, 60, Math.toRadians(180), Math.toRadians(180), 15)
                 .build();
 
-        myBot.runAction(myBot.getDrive().actionBuilder(new Pose2d(0, 0, 0))
-                        .lineToX(20.85)
+        myBot.runAction(myBot.getDrive().actionBuilder(new Pose2d(0, 0, Math.toRadians(0)))
+                        //.setTangent(Math.atan2(40, 20))
+                .lineToX(20.85)
+                .waitSeconds(2.5)
+                .setTangent(Math.toRadians(-125))
+                .splineToSplineHeading(new Pose2d(15.14, -25.99, Math.toRadians(-80)), Math.toRadians(-125))
+                                .waitSeconds(2.5)
+                        .setTangent(Math.toRadians(50))
+                .splineToSplineHeading(new Pose2d(20.85, -10, Math.toRadians(45)), Math.toRadians(50))
+                .waitSeconds(2.5)
+                //.setTangent(Math.toRadians(-82.45))
+                //.line
+                //.lineToYLinearHeading(-14.49, Math.toRadians(-82.45))
+                //.setTangent(Math.atan2(-25.99, 15.14))
+                //.lineToXLinearHeading(15.14, Math.toRadians(-78.6))
+                //.waitSeconds(2.5)
+                                //.setTangent(Math.atan2(-50, 25))
+                                //.lineToXLinearHeading(25, Math.PI)
+                        /*.lineToX(20.85)
                         .waitSeconds(2.5)
                         //.setTangent(Math.toRadians(-82.45))
                         //.line
-                        //.lineToYLinearHeading(-14.49, Math.toRadians(-82.45))
+                            //.lineToYLinearHeading(-14.49, Math.toRadians(-82.45))
                         .setTangent(0)
                         .splineToSplineHeading(new Pose2d(11.49, -14.84 , -74.25), Math.toRadians(-74.25))
                         .waitSeconds(2.5)
@@ -33,10 +50,10 @@ public class MeepMeepTesting {
                         .splineTo(new Vector2d(28.13, -16.51), Math.toRadians(-65.68))
                         .waitSeconds(2.5)
                         .splineTo(new Vector2d(20.85, 0), 0)
-                        .waitSeconds(2.5)
+                        .waitSeconds(2.5) */
                         .build());
 
-        meepMeep.setBackground(MeepMeep.Background.GRID_BLUE)
+        meepMeep.setBackground(MeepMeep.Background.FIELD_INTO_THE_DEEP_OFFICIAL)
                 .setDarkMode(true)
                 .setBackgroundAlpha(0.95f)
                 .addEntity(myBot)
