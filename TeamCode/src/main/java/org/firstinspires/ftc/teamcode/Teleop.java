@@ -93,6 +93,8 @@ public class Teleop extends LinearOpMode {
     boolean pressingBack = false;
     boolean pressingXG1 = false;
     boolean pressingYG1 = false;
+    boolean pressingBackG1 = false;
+    boolean enableTelemetry = false;
 
     @SuppressLint("SuspiciousIndentation")
     @Override
@@ -158,20 +160,26 @@ public class Teleop extends LinearOpMode {
             robot.rb.setPower(rightBackPower * scaleFactor);
 
             // Show the elapsed game time and wheel power.
-            /*telemetry.addData("Status", "Run Time: " + runtime.toString());
+            if (gamepad1.back && !pressingBackG1) {
+                pressingBackG1 = true;
+                enableTelemetry = !enableTelemetry;
+            }
+            else if (!gamepad2.back) pressingBackG1 = false;
+            telemetry.addData("Status", "Run Time: " + runtime.toString());
             telemetry.addData("Front left/Right", "%4.2f, %4.2f", leftFrontPower, rightFrontPower);
             telemetry.addData("Back  left/Right", "%4.2f, %4.2f", leftBackPower, rightBackPower);
             telemetry.addData("Vert lift power", robot.vertLift.getPower());
-            telemetry.addData("Vert lift pos", robot.vertLift.getCurrentPosition()); */
+            telemetry.addData("Vert lift pos", robot.vertLift.getCurrentPosition());
             telemetry.addData("Hang", robot.hang.getCurrentPosition());
-            telemetry.update();
+            if (enableTelemetry)
+                telemetry.update();
 
             if (gamepad2.right_bumper && !pressingRB) { //&& !pressingRB) {
                 pressingRB = true;
                 if (clawOpen)
                     robot.claw.setPosition(robot.CLAW_CLOSE);
                 else
-                    robot.claw.setPosition(robot.CLAW_OPEN);
+                    robot.claw.setPosition(robot.CLAW_FULL_OPEN);
                 pressingRB = true;
                 clawOpen = !clawOpen;
 
@@ -204,16 +212,12 @@ public class Teleop extends LinearOpMode {
 
             if (gamepad2.a && !pressingA) {// && !pressingA) {
                 pressingA = true;
-                if (!extenderDown) {
-                    robot.clawExtenderL.setPosition(robot.EXTENDER_L_DOWN);
-                    robot.clawExtenderR.setPosition(robot.EXTENDER_R_DOWN);
-
-                }
-                else {
-                    robot.clawExtenderL.setPosition(robot.EXTENDER_L_MIDDLE);
-                    robot.clawExtenderR.setPosition(robot.EXTENDER_R_MIDDLE);
-                }
-                    extenderDown = !extenderDown;
+                robot.vertLift.setTargetPosition(robot.VERT_HIGH);
+                robot.vertLift.setPower(1);
+                robot.vertLift.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+                robot.clawExtenderL.setPosition(robot.EXTENDER_L_UP);
+                robot.clawExtenderR.setPosition(robot.EXTENDER_R_UP);
+                robot.angle.setPosition(robot.ANGLE_FORWARD);
             }
             else if (!gamepad2.a) {
                 pressingA = false;
