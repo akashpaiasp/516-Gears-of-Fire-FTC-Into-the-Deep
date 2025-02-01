@@ -201,6 +201,8 @@ public class Teleop extends LinearOpMode {
 
                 }
                 else {
+                    robot.clawExtenderL.setPosition(robot.EXTENDER_L_MIDDLE);
+                    robot.clawExtenderR.setPosition(robot.EXTENDER_R_MIDDLE);
                     robot.horiLiftL.setPosition(robot.HORIZONTAL_LEFT_IN);
                     robot.horiLiftR.setPosition(robot.HORIZONTAL_RIGHT_IN);
                 }
@@ -212,12 +214,21 @@ public class Teleop extends LinearOpMode {
 
             if (gamepad2.a && !pressingA) {// && !pressingA) {
                 pressingA = true;
+                if(extenderDown) {
+                    robot.clawExtenderL.setPosition(robot.EXTENDER_L_DOWN);
+                    robot.clawExtenderR.setPosition(robot.EXTENDER_R_DOWN);
+                } else {
+                    robot.clawExtenderL.setPosition(robot.EXTENDER_L_MIDDLE);
+                    robot.clawExtenderR.setPosition(robot.EXTENDER_R_MIDDLE);
+                }
+                extenderDown = !extenderDown;
+                /*pressingA = true;
                 robot.vertLift.setTargetPosition(robot.VERT_HIGH);
                 robot.vertLift.setPower(1);
                 robot.vertLift.setMode(DcMotor.RunMode.RUN_TO_POSITION);
                 robot.clawExtenderL.setPosition(robot.EXTENDER_L_UP);
                 robot.clawExtenderR.setPosition(robot.EXTENDER_R_UP);
-                robot.angle.setPosition(robot.ANGLE_FORWARD);
+                robot.angle.setPosition(robot.ANGLE_FORWARD);*/
             }
             else if (!gamepad2.a) {
                 pressingA = false;
@@ -288,7 +299,14 @@ public class Teleop extends LinearOpMode {
             else if(manual) robot.vertLift.setPower(0);
 
             if (gamepad2.left_trigger > 0.5 && !pressingLT) {
-                manual = false;
+                pressingA = true;
+                robot.vertLift.setTargetPosition(robot.VERT_HIGH);
+                robot.vertLift.setPower(1);
+                robot.vertLift.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+                robot.clawExtenderL.setPosition(robot.EXTENDER_L_UP);
+                robot.clawExtenderR.setPosition(robot.EXTENDER_R_UP);
+                robot.angle.setPosition(robot.ANGLE_FORWARD);
+                /*manual = false;
                 pressingLT = true;
                 robot.vertLift.setMode(DcMotor.RunMode.RUN_TO_POSITION);
                 robot.vertLift.setTargetPosition(robot.SUBMERSIBLE_PICKUP);
@@ -297,7 +315,7 @@ public class Teleop extends LinearOpMode {
                 robot.horiLiftL.setPosition(robot.HORIZONTAL_LEFT_OUT);
                 robot.clawExtenderL.setPosition(robot.EXTENDER_L_DOWN);
                 robot.clawExtenderR.setPosition(robot.EXTENDER_R_DOWN);
-                extenderDown = true;
+                extenderDown = true;*/
             }
             else if(gamepad2.left_trigger < .5) pressingLT = false;
 
@@ -305,7 +323,7 @@ public class Teleop extends LinearOpMode {
                 robot.claw.setPosition(robot.CLAW_OPEN);
                 clawOpen = true;
                 robot.vertLift.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-                robot.vertLift.setTargetPosition(0);
+                robot.vertLift.setTargetPosition(100);
                 robot.vertLift.setPower(1);
                 pressingRT = true;
                 manual = false;

@@ -38,17 +38,17 @@ public class Hardware {
     public final double CLAW_OPEN = .272;
     public final double CLAW_FULL_OPEN = .053;
 
-    public final double HORIZONTAL_LEFT_OUT = .31;
-    public final double HORIZONTAL_LEFT_IN = .78;
-    public final double HORIZONTAL_RIGHT_OUT = .89;
-    public final double HORIZONTAL_RIGHT_IN = .41;
+    public final double HORIZONTAL_LEFT_OUT = .16;
+    public final double HORIZONTAL_LEFT_IN = .72;
+    public final double HORIZONTAL_RIGHT_OUT = .88;
+    public final double HORIZONTAL_RIGHT_IN = .33;
     public final double EXTENDER_L_UP = .13;
-    public final double EXTENDER_L_DOWN = .6 +.064;
+    public final double EXTENDER_L_DOWN = .6 +.064 + 0.1;
     public final double EXTENDER_L_MIDDLE = .451;
     public final double EXTENDER_L_FULL_UP = 0.064;
     public final double EXTENDER_L_FULLDOWN = .646+.064;
     public final double EXTENDER_R_UP = .62;
-    public final double EXTENDER_R_DOWN = .192;
+    public final double EXTENDER_R_DOWN = .192 - 0.1;
     public final double EXTENDER_R_FULLDOWN = .051;
     public final double EXTENDER_R_MIDDLE = .353;
     public final double EXTENDER_R_FULL_UP = .750;

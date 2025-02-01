@@ -17,7 +17,7 @@ public class RoadrunnerAuto extends LinearOpMode {
         public class GroundPickup implements Action {
             @Override
             public boolean run(@NonNull TelemetryPacket telemetryPacket) {
-                robot.vertLift.setTargetPosition(100);
+                robot.vertLift.setTargetPosition(50);
                 //robot.horiLiftR.setPosition(robot.HORIZONTAL_RIGHT_OUT);
                 //robot.horiLiftL.setPosition(robot.HORIZONTAL_LEFT_OUT);
                 //robot.clawExtenderL.setPosition(robot.EXTENDER_L_FULLDOWN);
@@ -51,14 +51,32 @@ public class RoadrunnerAuto extends LinearOpMode {
             robot.vertLift.setPower(1);
             //robot.horiLiftR.setPosition(robot.HORIZONTAL_RIGHT_OUT);
             //robot.horiLiftL.setPosition(robot.HORIZONTAL_LEFT_OUT);
-            robot.clawExtenderL.setPosition(robot.EXTENDER_L_UP);
-            robot.clawExtenderR.setPosition(robot.EXTENDER_R_UP);
-            robot.angle.setPosition(robot.ANGLE_FORWARD);
+            robot.clawExtenderL.setPosition(robot.EXTENDER_L_UP+0.05);
+            robot.clawExtenderR.setPosition(robot.EXTENDER_R_UP-0.05);
+            robot.angle.setPosition(robot.ANGLE_SIDEWAYS);
             return false;
         }
     }
 
-
+    public class Extend implements Action {
+            @Override
+            public boolean run(@NonNull TelemetryPacket telemetryPacket) {
+                resetRuntime();
+                while(getRuntime() < 1) {}
+                robot.horiLiftL.setPosition(robot.HORIZONTAL_LEFT_OUT + 0.1);
+                robot.horiLiftR.setPosition(robot.HORIZONTAL_RIGHT_OUT - 0.1);
+                robot.angle.setPosition(robot.ANGLE_SIDEWAYS);
+                /*robot.clawExtenderL.setPosition(robot.EXTENDER_L_DOWN);
+                robot.clawExtenderR.setPosition(robot.EXTENDER_R_DOWN);*/
+                while(getRuntime() < 1) {}
+                robot.claw.setPosition(robot.CLAW_CLOSE);
+                while(getRuntime() < 0.5) {}
+                robot.horiLiftL.setPosition(robot.HORIZONTAL_LEFT_IN);
+                robot.horiLiftR.setPosition(robot.HORIZONTAL_RIGHT_IN);
+                while(getRuntime() < 1) {}
+                return false;
+            }
+    }
     public class Claw implements Action {
             @Override
             public boolean run(@NonNull TelemetryPacket telemetryPacket) {
@@ -82,12 +100,17 @@ public class RoadrunnerAuto extends LinearOpMode {
             robot.clawExtenderL.setPosition(robot.EXTENDER_L_FULLDOWN);
             robot.clawExtenderR.setPosition(robot.EXTENDER_R_FULLDOWN);
             resetRuntime();
-            while (getRuntime() < 0.4) {}
+            while (getRuntime() < 1) {}
+            //while(getRuntime() < 0.8) {}
             robot.claw.setPosition(robot.CLAW_CLOSE);
             resetRuntime();
             while (getRuntime() < 0.2) {}
             return false;
         }
+    }
+
+    public Action Extend() {
+            return new Extend();
     }
     public Action clawClose() {
         return new ClawClose();
@@ -111,8 +134,10 @@ public class RoadrunnerAuto extends LinearOpMode {
 
 
         TrajectoryActionBuilder tab1 = drive.actionBuilder(initialPose)
-                .waitSeconds(1.5)
-                .lineToX(21);
+                .waitSeconds(0.75)
+                .lineToX(21)
+                .waitSeconds(0.75);
+                //.lineToX(27);
                 //.setTangent(Math.toRadians(-82.45))
                 //.line
                 //.lineToYLinearHeading(-14.49, Math.toRadians(-82.45))
@@ -122,34 +147,37 @@ public class RoadrunnerAuto extends LinearOpMode {
         TrajectoryActionBuilder backUp = drive.actionBuilder(new Pose2d(22, 0, 0))
                 .lineToX(18);
         TrajectoryActionBuilder tab2 = drive.actionBuilder(new Pose2d(18, 0, 0))
-                .waitSeconds(.5)
+                //.waitSeconds(1)
                 .setTangent(Math.toRadians(-105))
-                .splineToSplineHeading(new Pose2d(16.75, -25.99, Math.toRadians(-85)), Math.toRadians(-105));
+                .splineToSplineHeading(new Pose2d(16.75, /*-24.99*/-23.59, Math.toRadians(-85)), Math.toRadians(-105));
         TrajectoryActionBuilder tab3 = drive.actionBuilder(new Pose2d(16.75, -25.99, Math.toRadians(-85)))
-                .waitSeconds(2.1)
+                .waitSeconds(1)
                 .setTangent(Math.toRadians(50))
                 .splineToSplineHeading(new Pose2d(23.5, -9, Math.toRadians(45)), Math.toRadians(50));
         TrajectoryActionBuilder backUp2 = drive.actionBuilder(new Pose2d(23.5, -9, Math.toRadians(45)))
                 .lineToX(20);
         TrajectoryActionBuilder tab4 = drive.actionBuilder(new Pose2d(20, -9, Math.toRadians(45)))
-                .waitSeconds(2.5)
+                //.waitSeconds(1)
                 .setTangent(Math.toRadians(100))
-                .splineToSplineHeading(new Pose2d(27, -25, Math.toRadians(-100)), Math.toRadians(100));
+                .splineToSplineHeading(new Pose2d(/*27*/25, /*-25*//*-24.5*/-23.5, Math.toRadians(-100)), Math.toRadians(100));
         TrajectoryActionBuilder tab5 = drive.actionBuilder(new Pose2d(27, -25, Math.toRadians(-100)))
-                .waitSeconds(2.5)
+                .waitSeconds(1)
                 .setTangent(Math.toRadians(-100))
                 .splineToSplineHeading(new Pose2d(23.5, -9, Math.toRadians(45)), Math.toRadians(-100));
         TrajectoryActionBuilder backUp3 = drive.actionBuilder(new Pose2d(23.5, -9, Math.toRadians(45)))
                 .lineToX(20);
         TrajectoryActionBuilder tab6 = drive.actionBuilder(new Pose2d(20, -9, Math.toRadians(45)))
-                .waitSeconds(2.5)
+                //.waitSeconds(1)
                 .setTangent(Math.toRadians(-100))
-                .splineToSplineHeading(new Pose2d(21.2, -25.18, Math.toRadians(-35.5)), Math.toRadians(-100));
-        TrajectoryActionBuilder tab7 = drive.actionBuilder(new Pose2d(21.2, -25.18, Math.toRadians(-35.5)))
-                .waitSeconds(2.5)
+                .splineToSplineHeading(new Pose2d(/*19.2*/18, /*-25.18*/-36.5, Math.toRadians(-5.5/*-35.5*/)), Math.toRadians(-100));
+        TrajectoryActionBuilder tab7 = drive.actionBuilder(new Pose2d(18, -36.5, Math.toRadians(-5.5)))
+                //.waitSeconds(1)
+                .lineToX(25);
+        TrajectoryActionBuilder tab8 = drive.actionBuilder(new Pose2d(21.2, -25.18, Math.toRadians(-35.5)))
+                .waitSeconds(1.5)
                 .setTangent(Math.toRadians(100))
                 .splineToSplineHeading(new Pose2d(23.5, -9, Math.toRadians(45)), Math.toRadians(100))
-                .waitSeconds(2.5);
+                .waitSeconds(1);
         TrajectoryActionBuilder backUp4 = drive.actionBuilder(new Pose2d(23.5, -9, Math.toRadians(45)))
                 .lineToX(20);
         Action trajectoryActionCloseOut = backUp4.endTrajectory().fresh()
@@ -169,22 +197,25 @@ public class RoadrunnerAuto extends LinearOpMode {
                         groundPickup(),
                         tab2.build(),
                         clawClose(),
-                        basket(),
+                        basket45(),
                         tab3.build(),
                         claw(),
                         backUp2.build(),
                         groundPickup(),
                         tab4.build(),
                         clawClose(),
-                        basket(),
+                        basket45(),
                         tab5.build(),
                         claw(),
                         backUp3.build(),
                         groundPickup(),
-                        tab6.build(),
-                        clawClose(),
-                        basket(),
+                        //extenders shoot out
+                        //Extend(),
+                        //4th sample
                         tab7.build(),
+                        clawClose(),
+                        basket45(),
+                        tab8.build(),
                         claw(),
                         backUp4.build(),
                         trajectoryActionCloseOut
