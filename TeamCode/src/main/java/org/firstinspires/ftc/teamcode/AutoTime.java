@@ -13,8 +13,8 @@ public class AutoTime extends LinearOpMode {
     public void runOpMode() {
         robot = new Hardware();
         robot.init(hardwareMap);
-        robot.clawExtenderR.setPosition(robot.EXTENDER_R_FULL_UP);
-        robot.clawExtenderL.setPosition(robot.EXTENDER_L_FULL_UP);
+        robot.clawExtenderR.setPosition(robot.EXTENDER_R_UP);
+        robot.clawExtenderL.setPosition(robot.EXTENDER_L_UP);
         robot.claw.setPosition(robot.CLAW_CLOSE);
         waitForStart();
         robot.vertLift.setTargetPosition(robot.RUNG);

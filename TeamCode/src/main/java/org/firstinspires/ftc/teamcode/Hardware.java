@@ -2,6 +2,7 @@ package org.firstinspires.ftc.teamcode;
 
 
 import com.qualcomm.robotcore.hardware.DcMotor;
+import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.Servo;
@@ -17,8 +18,9 @@ public class Hardware {
     public DcMotor rb;
     public DcMotor lf;
     public DcMotor lb;
-    public DcMotor vertLift;
-    public DcMotor hang;
+    public DcMotorEx vertLift;
+    public DcMotorEx hangL;
+    public DcMotorEx hangR;
     public Servo horiLiftL;
     public Servo horiLiftR;
 
@@ -34,35 +36,46 @@ public class Hardware {
     private static Hardware myInstance = null;
     public double maxSpeed = 1;
 
-    public final double CLAW_CLOSE = .54;
-    public final double CLAW_OPEN = .272;
-    public final double CLAW_FULL_OPEN = .053;
+    public final double CLAW_CLOSE = .45;
+    public final double CLAW_OPEN = .05;
+    public final double CLAW_FULL_OPEN = 0;
 
-    public final double HORIZONTAL_LEFT_OUT = .16;
-    public final double HORIZONTAL_LEFT_IN = .72;
-    public final double HORIZONTAL_RIGHT_OUT = .88;
-    public final double HORIZONTAL_RIGHT_IN = .33;
-    public final double EXTENDER_L_UP = .13;
-    public final double EXTENDER_L_DOWN = .6 +.064 + 0.1;
-    public final double EXTENDER_L_MIDDLE = .451;
-    public final double EXTENDER_L_FULL_UP = 0.064;
-    public final double EXTENDER_L_FULLDOWN = .646+.064;
-    public final double EXTENDER_R_UP = .62;
-    public final double EXTENDER_R_DOWN = .192 - 0.1;
-    public final double EXTENDER_R_FULLDOWN = .051;
-    public final double EXTENDER_R_MIDDLE = .353;
-    public final double EXTENDER_R_FULL_UP = .750;
-    public final double ANGLE_FORWARD = .484;
-    public final double ANGLE_SIDEWAYS = .781;
-    public final double ANGLE_L = 664;
-    public final double ANGLE_R = .309;
+    public final double HORIZONTAL_LEFT_OUT = .11;
+    public final double HORIZONTAL_LEFT_IN = .95;
+    public final double HORIZONTAL_RIGHT_OUT = .93;
+    public final double HORIZONTAL_RIGHT_IN = .1;
+    public final double EXTENDER_L_UP = .51;
+    public final double EXTENDER_L_DOWN = 1;
+    public final double EXTENDER_L_MIDDLE = .72;
+    public final double EXTENDER_L_FULL_UP = .42;
+    public final double EXTENDER_L_SPECIMEN_UP = .48;
+    public final double EXTENDER_L_FULLDOWN = 1;
+    public final double EXTENDER_R_UP = .82;
+    public final double EXTENDER_R_DOWN = .33;
+    public final double EXTENDER_R_FULLDOWN = .315;
+    public final double EXTENDER_R_MIDDLE = .6;
+    public final double EXTENDER_R_FULL_UP = .91;
+    public final double EXTENDER_R_SPECIMEN_UP = .84;
+    public final double ANGLE_FORWARD = .488;
+    public final double ANGLE_SIDEWAYS = .16;
+    public final double ANGLE_L = .658;
+    public final double ANGLE_R = .917;
     public final int SUBMERSIBLE_PICKUP = -300;
     public final int VERT_HIGH = -3940;
     public final int WALL = -375;
-    public final int RUNG = -2550;
-    public final int RUNG_DOWN = -1700;
+    public final int RUNG = -2300;
+    public final int RUNG_DOWN = -1400;
     public final int HANG_1 = 500;
     public final int HANG_2 = 0;
+    public final int VERT_SPECIMEN_AKASH = -1006;
+    /*
+    public final int hangLLow = -1500;
+    public final int hangRLow = -600;
+    public final int hangLUp = 4508;
+    public final int hangRUp = 3751;
+    public final int hangLHang = 39;
+    public final int hangRHang = -695; */
+    public final int hangAutoL = 7029;
 
 
 
@@ -82,7 +95,7 @@ public class Hardware {
 
     public void init(HardwareMap hwMap) {
 
-        vertLift = hwMap.get(DcMotor.class,"vertLift");
+        vertLift = hwMap.get(DcMotorEx.class,"vertLift");
         vertLift.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         vertLift.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         vertLift.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
@@ -136,10 +149,15 @@ public class Hardware {
         angle = hwMap.get(Servo.class, "angle");
         angle.setPosition(ANGLE_SIDEWAYS);
 
-        hang = hwMap.get(DcMotor.class, "hang");
-        hang.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
-        hang.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-        hang.setPower(0);
+        hangL = hwMap.get(DcMotorEx.class, "hangL");
+        hangL.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        hangL.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        hangL.setPower(0);
+
+        hangR = hwMap.get(DcMotorEx.class, "hangR");
+        hangR.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        hangR.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        hangR.setPower(0);
     }
 
 

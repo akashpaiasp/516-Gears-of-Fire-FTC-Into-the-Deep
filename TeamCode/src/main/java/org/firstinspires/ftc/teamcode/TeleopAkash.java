@@ -67,9 +67,8 @@ import org.firstinspires.ftc.robotcore.external.navigation.CurrentUnit;
  */
 
 
-
-@TeleOp(name="The 420 point teleop program", group="Linear OpMode")
-public class Teleop extends LinearOpMode {
+@TeleOp(name="Akash Teleop", group="Linear OpMode")
+public class TeleopAkash extends LinearOpMode {
     private Hardware robot;
 
     // Declare OpMode members for each of the 4 motors.
@@ -82,7 +81,7 @@ public class Teleop extends LinearOpMode {
     boolean extenderDown = false;
     boolean horiIn = true;
     boolean slideIn = true;
-    boolean manual = true;
+    boolean manual = false;
     boolean pressingX = false;
     boolean pressingLT = false;
     boolean pressingRT = false;
@@ -91,18 +90,37 @@ public class Teleop extends LinearOpMode {
     boolean timer = false;
     boolean timer2 = false;
     double time = 0;
+    double time2 = 0;
+    boolean timer3 = false;
+    boolean timer4 = false;
+    boolean timer5 = false;
+    boolean timer6 = false;
+    boolean timer7 = false;
+    boolean timer8 = false;
+    boolean timer9 = false;
     boolean rung = true;
     boolean pressingBack = false;
     boolean pressingXG1 = false;
     boolean pressingYG1 = false;
     boolean pressingBackG1 = false;
     boolean enableTelemetry = false;
+    boolean pressingB = false;
+    boolean manualPower = true;
+    boolean rungJustScored = false;
+    boolean specimenTeleop = true;
+    boolean highBasket = true;
+
 
     @SuppressLint("SuspiciousIndentation")
     @Override
     public void runOpMode() {
         robot = new Hardware();
         robot.init(hardwareMap);
+        robot.hangL.setTargetPosition(0);
+        robot.hangL.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        robot.hangL.setPower(1);
+        timer9 = true;
+        time = getRuntime();
         // Wait for the game to start (driver presses START)
         telemetry.addData("Status", "Initialized");
         telemetry.update();
@@ -156,25 +174,28 @@ public class Teleop extends LinearOpMode {
             scaleFactor *= Math.max(Math.abs(1 - gamepad1.right_trigger), .4);
 
             // Send calculated power to wheels
-            robot.lf.setPower(leftFrontPower * scaleFactor);
-            robot.rf.setPower(rightFrontPower * scaleFactor);
-            robot.lb.setPower(leftBackPower * scaleFactor);
-            robot.rb.setPower(rightBackPower * scaleFactor);
+            if (manualPower) {
+                robot.lf.setPower(leftFrontPower * scaleFactor);
+                robot.rf.setPower(rightFrontPower * scaleFactor);
+                robot.lb.setPower(leftBackPower * scaleFactor);
+                robot.rb.setPower(rightBackPower * scaleFactor);
+            }
 
             // Show the elapsed game time and wheel power.
             if (gamepad1.back && !pressingBackG1) {
                 pressingBackG1 = true;
                 enableTelemetry = !enableTelemetry;
             }
-            else if (!gamepad2.back) pressingBackG1 = false;
+            else if (!gamepad1.back) pressingBackG1 = false;
             telemetry.addData("Status", "Run Time: " + runtime.toString());
             telemetry.addData("Front left/Right", "%4.2f, %4.2f", leftFrontPower, rightFrontPower);
             telemetry.addData("Back  left/Right", "%4.2f, %4.2f", leftBackPower, rightBackPower);
             telemetry.addData("Vert lift power", robot.vertLift.getPower());
             telemetry.addData("Vert lift pos", robot.vertLift.getCurrentPosition());
-            telemetry.addData("Hang l", robot.hangL.getCurrentPosition());
-            telemetry.addData("Hang r", robot.hangR.getCurrentPosition());
+            telemetry.addData("Hang", robot.hangL.getCurrentPosition());
+            telemetry.addData("Mode", specimenTeleop ? "Specimen" : "Sample");
             telemetry.addData("Hang Current", robot.hangL.getCurrent(CurrentUnit.AMPS));
+            telemetry.addData("Slides current", robot.vertLift.getCurrent(CurrentUnit.AMPS));
             if (enableTelemetry)
                 telemetry.update();
 
@@ -199,18 +220,37 @@ public class Teleop extends LinearOpMode {
 
             if (gamepad2.y && !pressingY) {
                 pressingY = true;
-                if (horiIn) {
-                    robot.horiLiftL.setPosition(robot.HORIZONTAL_LEFT_OUT);
-                    robot.horiLiftR.setPosition(robot.HORIZONTAL_RIGHT_OUT);
-
+                manual = false;
+                if (specimenTeleop) {
+                    if (!horiIn) {
+                        robot.horiLiftL.setPosition(robot.HORIZONTAL_LEFT_OUT);
+                        robot.horiLiftR.setPosition(robot.HORIZONTAL_RIGHT_OUT);
+                        time = getRuntime();
+                        timer4 = true;
+                        rungJustScored = true;
+                    } else {
+                        rungJustScored = false;
+                        robot.vertLift.setTargetPosition(robot.VERT_SPECIMEN_AKASH);
+                        robot.vertLift.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+                        robot.vertLift.setPower(1);
+                        robot.clawExtenderL.setPosition(robot.EXTENDER_L_SPECIMEN_UP);
+                        robot.clawExtenderR.setPosition(robot.EXTENDER_R_SPECIMEN_UP);
+                        robot.horiLiftL.setPosition(robot.HORIZONTAL_LEFT_IN);
+                        robot.horiLiftR.setPosition(robot.HORIZONTAL_RIGHT_IN);
+                    }
+                    horiIn = !horiIn;
                 }
                 else {
-                    robot.clawExtenderL.setPosition(robot.EXTENDER_L_MIDDLE);
-                    robot.clawExtenderR.setPosition(robot.EXTENDER_R_MIDDLE);
-                    robot.horiLiftL.setPosition(robot.HORIZONTAL_LEFT_IN);
-                    robot.horiLiftR.setPosition(robot.HORIZONTAL_RIGHT_IN);
+                    robot.vertLift.setTargetPosition(robot.VERT_HIGH);
+                    robot.vertLift.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+                    robot.vertLift.setPower(1);
+                    //robot.horiLiftR.setPosition(robot.HORIZONTAL_RIGHT_OUT);
+                    //robot.horiLiftL.setPosition(robot.HORIZONTAL_LEFT_OUT);
+                    robot.clawExtenderL.setPosition(robot.EXTENDER_L_UP);
+                    robot.clawExtenderR.setPosition(robot.EXTENDER_R_UP);
+                    robot.angle.setPosition(robot.ANGLE_SIDEWAYS);
+
                 }
-                horiIn = !horiIn;
             }
             else if (!gamepad2.y) {
                 pressingY = false;
@@ -219,8 +259,8 @@ public class Teleop extends LinearOpMode {
             if (gamepad2.a && !pressingA) {// && !pressingA) {
                 pressingA = true;
                 if(extenderDown) {
-                    robot.clawExtenderL.setPosition(robot.EXTENDER_L_FULLDOWN);
-                    robot.clawExtenderR.setPosition(robot.EXTENDER_R_FULLDOWN);
+                    robot.clawExtenderL.setPosition(robot.EXTENDER_L_DOWN);
+                    robot.clawExtenderR.setPosition(robot.EXTENDER_R_DOWN);
                 } else {
                     robot.clawExtenderL.setPosition(robot.EXTENDER_L_MIDDLE);
                     robot.clawExtenderR.setPosition(robot.EXTENDER_R_MIDDLE);
@@ -238,13 +278,13 @@ public class Teleop extends LinearOpMode {
                 pressingA = false;
             }
 
-            if (gamepad2.b && !pressingLT) {
+            if (gamepad2.b && !pressingB) {
                 pressingLT = true;
                 extenderDown = false;
                 robot.clawExtenderL.setPosition(robot.EXTENDER_L_UP);
                 robot.clawExtenderR.setPosition(robot.EXTENDER_R_UP);
             }
-            else if (!gamepad2.b) pressingLT = false;
+            else if (!gamepad2.b) pressingB = false;
 
             if (gamepad2.dpad_down && !pressingDpad) {
                 pressingDpad = true;
@@ -303,13 +343,16 @@ public class Teleop extends LinearOpMode {
             else if(manual) robot.vertLift.setPower(0);
 
             if (gamepad2.left_trigger > 0.5 && !pressingLT) {
-                pressingA = true;
-                robot.vertLift.setTargetPosition(robot.VERT_HIGH);
-                robot.vertLift.setPower(1);
+                pressingLT = true;//niggAS re stupid and i hate them so much
+                robot.claw.setPosition(robot.CLAW_FULL_OPEN);
+                clawOpen = true;
+                robot.vertLift.setTargetPosition(robot.SUBMERSIBLE_PICKUP);
                 robot.vertLift.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-                robot.clawExtenderL.setPosition(robot.EXTENDER_L_UP + .05);
-                robot.clawExtenderR.setPosition(robot.EXTENDER_R_UP - .05);
-                robot.angle.setPosition(robot.ANGLE_FORWARD);
+                robot.vertLift.setPower(1); //NIGGAS ARE BIG AND BLACK
+                robot.horiLiftR.setPosition(robot.HORIZONTAL_RIGHT_OUT);
+                robot.horiLiftL.setPosition(robot.HORIZONTAL_LEFT_OUT);
+                time = getRuntime();
+                timer3 = true;
                 /*manual = false;
                 pressingLT = true;
                 robot.vertLift.setMode(DcMotor.RunMode.RUN_TO_POSITION);
@@ -324,10 +367,11 @@ public class Teleop extends LinearOpMode {
             else if(gamepad2.left_trigger < .5) pressingLT = false;
 
             if (gamepad2.right_trigger > 0.5 && !pressingRT) {
-                robot.claw.setPosition(robot.CLAW_OPEN);
+                robot.claw.setPosition(robot.CLAW_FULL_OPEN);
                 clawOpen = true;
+
+                robot.vertLift.setTargetPosition(0);
                 robot.vertLift.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-                robot.vertLift.setTargetPosition(100);
                 robot.vertLift.setPower(1);
                 pressingRT = true;
                 manual = false;
@@ -338,7 +382,7 @@ public class Teleop extends LinearOpMode {
                 pressingRT = false;
             }
 
-            if (timer && getRuntime() > time + .2) {
+            if (timer && getRuntime() > time + .3) {
                 manual = false;
                 timer = false;
                 robot.claw.setPosition(robot.CLAW_CLOSE);
@@ -349,31 +393,102 @@ public class Teleop extends LinearOpMode {
             if (timer2 && getRuntime() > time + .1) {
                 timer2 = false;
                 manual = false;
-                robot.vertLift.setMode(DcMotor.RunMode.RUN_TO_POSITION);
                 robot.vertLift.setTargetPosition(robot.SUBMERSIBLE_PICKUP);
+                robot.vertLift.setMode(DcMotor.RunMode.RUN_TO_POSITION);
                 robot.vertLift.setPower(1);
             }
-
-            if (gamepad2.left_bumper && !pressingLB) {
-                manual = false;
-                pressingLB = true;
+            if (timer3 && getRuntime() > time + .15) {
+                timer3 = false;
+                robot.clawExtenderL.setPosition(robot.EXTENDER_L_FULLDOWN);
+                robot.clawExtenderR.setPosition(robot.EXTENDER_R_FULLDOWN);
+            }
+            if (timer4 && getRuntime() > time + .15) {
+                timer4 = false;
+                manualPower = false;
+                robot.setPower(1, 1, 1, 1);
+                time = getRuntime();
+                timer5 = true;
+            }
+            if (timer5 && getRuntime() > time + .15) {
+                timer5 = false;
+                robot.setPower(0, 0, 0, 0);
+                manualPower = true;
+            }
+            if (timer6 && getRuntime() > time + .15) {
+                timer6 = false;
+                robot.horizontalIn();
+                horiIn = true;
+                time = getRuntime();
+                timer7 = true;
+            }
+            if (timer7 && getRuntime() > time + .25) {
+                timer7 = false;
                 robot.vertLift.setPower(1);
-                robot.vertLift.setMode(DcMotor.RunMode.RUN_TO_POSITION);
                 robot.vertLift.setTargetPosition(0);
-                robot.horiLiftR.setPosition(robot.HORIZONTAL_RIGHT_IN);
-                robot.horiLiftL.setPosition(robot.HORIZONTAL_LEFT_IN);
+                robot.vertLift.setMode(DcMotor.RunMode.RUN_TO_POSITION);
                 robot.angle.setPosition(robot.ANGLE_SIDEWAYS);
                 robot.clawExtenderL.setPosition(robot.EXTENDER_L_MIDDLE);
                 robot.clawExtenderR.setPosition(robot.EXTENDER_R_MIDDLE);
                 extenderDown = false;
-                horiIn = true;
+            }
+            if (timer8 && getRuntime() > time + .25) {
+                robot.vertLift.setTargetPosition(robot.VERT_HIGH);
+                robot.vertLift.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+                robot.vertLift.setPower(1);
+                //robot.horiLiftR.setPosition(robot.HORIZONTAL_RIGHT_OUT);
+                //robot.horiLiftL.setPosition(robot.HORIZONTAL_LEFT_OUT);
+                robot.clawExtenderL.setPosition(robot.EXTENDER_L_UP);
+                robot.clawExtenderR.setPosition(robot.EXTENDER_R_UP);            }
+            if (timer9 && getRuntime() > time2 + 5) {
+                robot.hangL.setPower(0);
+                robot.hangL.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+            }
+
+                if (gamepad2.left_bumper && !pressingLB) {
+                manual = false;
+                pressingLB = true;
+                if (specimenTeleop) {
+                    if (rungJustScored) {
+                        rungJustScored = false;
+                        robot.claw.setPosition(robot.CLAW_FULL_OPEN);
+                        time = getRuntime();
+                        timer6 = true;
+                    } else {
+                        robot.vertLift.setPower(1);
+                        robot.vertLift.setTargetPosition(0);
+                        robot.vertLift.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+                        robot.horiLiftR.setPosition(robot.HORIZONTAL_RIGHT_IN);
+                        robot.horiLiftL.setPosition(robot.HORIZONTAL_LEFT_IN);
+                        robot.angle.setPosition(robot.ANGLE_SIDEWAYS);
+                        robot.clawExtenderL.setPosition(robot.EXTENDER_L_MIDDLE);
+                        robot.clawExtenderR.setPosition(robot.EXTENDER_R_MIDDLE);
+                        extenderDown = false;
+                        horiIn = true;
+                    }
+                }
+                else {
+                    if (highBasket) {
+                        robot.clawExtenderL.setPosition(robot.EXTENDER_L_MIDDLE);
+                        robot.clawExtenderR.setPosition(robot.EXTENDER_R_MIDDLE);
+                        robot.horizontalIn();
+                        time = getRuntime();
+                        timer8 = true;
+
+                    }
+                    else {
+
+                    }
+                    highBasket = !highBasket;
+                }
             }
             else if (!gamepad2.left_bumper) {
                 pressingLB = false;
             }
 
             if (gamepad2.back && !pressingBack) {
-                robot.vertLift.setPower(1);
+                pressingBack = true;
+                specimenTeleop = !specimenTeleop;
+                /*robot.vertLift.setPower(1);
                 robot.vertLift.setMode(DcMotor.RunMode.RUN_TO_POSITION);
                 robot.vertLift.setTargetPosition(robot.WALL);
                 robot.horiLiftR.setPosition(robot.HORIZONTAL_RIGHT_OUT);
@@ -383,33 +498,30 @@ public class Teleop extends LinearOpMode {
                 extenderDown = false;
                 robot.claw.setPosition(robot.CLAW_OPEN);
                 robot.angle.setPosition(robot.ANGLE_SIDEWAYS);
-                clawOpen = true;
+                clawOpen = true; */
             }
 
-            if (gamepad1.x && !pressingXG1) {
-                robot.hangR.setTargetPosition(robot.hangR.getCurrentPosition() + 50);
-                robot.hangR.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+            /*if (gamepad1.a && !pressingXG1) {
+                pressingXG1 = true;
+                robot.hangL.setTargetPosition(robot.hangLUp);
+                robot.hangR.setTargetPosition(robot.hangRUp);
+                robot.hangL.setPower(1);
                 robot.hangR.setPower(1);
+                robot.hangL.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+                robot.hangR.setMode(DcMotor.RunMode.RUN_TO_POSITION);
             }
-            else if (!gamepad1.x)
+            else if (!gamepad1.a)
                 pressingXG1 = false;
             if (gamepad1.y && !pressingYG1) {
-                robot.hangR.setTargetPosition(robot.hangR.getCurrentPosition() - 50);
-                robot.hangR.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+                robot.hangL.setTargetPosition(robot.hangLHang);
+                robot.hangR.setTargetPosition(robot.hangRHang);
+                robot.hangL.setPower(1);
                 robot.hangR.setPower(1);
-            }
-
-
-            if (gamepad1.left_bumper) {
-                robot.hangL.setTargetPosition(robot.hangL.getCurrentPosition() + 50);
                 robot.hangL.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-                robot.hangL.setPower(1);
+                robot.hangR.setMode(DcMotor.RunMode.RUN_TO_POSITION);
             }
-            else if (gamepad1.right_bumper) {
-                robot.hangL.setTargetPosition(robot.hangL.getCurrentPosition() - 50);
-                robot.hangL.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-                robot.hangL.setPower(1);
-            }
+            else if (!gamepad1.y)
+                pressingYG1 = false; */
         }
         }
     }

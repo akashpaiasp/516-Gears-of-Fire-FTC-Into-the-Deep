@@ -35,8 +35,8 @@ public class Tester extends LinearOpMode {
         waitForStart();
         while (opModeIsActive()) {
             telemetry.addData("claw pos", robot.claw.getPosition());
-            telemetry.addData("horizontal lift l", robot.horiLiftL.getPosition());
-            telemetry.addData("horizontal lift r", robot.horiLiftR.getPosition());
+            telemetry.addData("horizontal lift l", robot.clawExtenderL.getPosition());
+            telemetry.addData("horizontal lift r", robot.clawExtenderR.getPosition());
             telemetry.addData("lf", robot.lf.getCurrentPosition());
             telemetry.addData("rf", robot.rf.getCurrentPosition());
             telemetry.addData("lb", robot.lb.getCurrentPosition());
@@ -46,28 +46,28 @@ public class Tester extends LinearOpMode {
             telemetry.update();
             if(gamepad2.right_bumper && !pressingRB) {
                 pos1 += 0.01;
-                robot.horiLiftR.setPosition(pos1);
+                robot.clawExtenderL.setPosition(pos1);
                 pressingRB = true;
             } else if(!gamepad2.right_bumper) {
                 pressingRB = false;
             }
             if(gamepad2.left_bumper && !pressingLB) {
                 pos1 -= 0.01;
-                robot.horiLiftR.setPosition(pos1);
+                robot.clawExtenderL.setPosition(pos1);
                 pressingLB = true;
             } else if(!gamepad2.left_bumper) {
                 pressingLB = false;
             }
             if(gamepad2.a && !pressingA) {
                 pos2 += 0.01;
-                robot.horiLiftL.setPosition(pos2);
+                robot.clawExtenderR.setPosition(pos2);
                 pressingA = true;
             } else if(!gamepad2.a) {
                 pressingA = false;
             }
             if(gamepad2.b && !pressingB) {
                 pos2 -= 0.01;
-                robot.horiLiftL.setPosition(pos2);
+                robot.clawExtenderR.setPosition(pos2);
                 pressingB = true;
             } else if(!gamepad2.b) {
                 pressingB = false;
